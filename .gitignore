@@ -9,11 +9,20 @@ nbproject
 .project
 .settings
 
+# temp files
+*.bak
+
+# bower
+.bowerrc
+
 # windows thumbnail cache
 Thumbs.db
 
 # composer vendor dir
 /vendor
+
+# runtime data
+/runtime
 
 # composer itself is not needed
 composer.phar
