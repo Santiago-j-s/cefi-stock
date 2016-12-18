@@ -3,15 +3,15 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "turno".
  *
  * @property integer $ID
- * @property string $Hora Inicial
- * @property string $Hora Final
- * @property string $Fecha
- * @property integer $usuario_ID
+ * @property string $HoraInicial
+ * @property string $HoraFinal
+ * @property integer $UsuarioID
  *
  * @property Movimiento[] $movimientos
  * @property Pago[] $pagos
@@ -38,10 +38,16 @@ class Turno extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Hora Inicial', 'Hora Final', 'Fecha'], 'safe'],
-            [['usuario_ID'], 'required'],
-            [['usuario_ID'], 'integer'],
-            [['usuario_ID'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['usuario_ID' => 'ID']],
+            [['HoraInicial', 'HoraFinal'], 'safe'],
+            [['UsuarioID'], 'required'],
+            [['UsuarioID'], 'integer'],
+            [
+                ['UsuarioID'],
+                'exist', 
+                'skipOnError' => true,
+                'targetClass' => Usuario::className(),
+                'targetAttribute' => ['UsuarioID' => 'ID']
+            ],
         ];
     }
 
@@ -52,10 +58,9 @@ class Turno extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'Hora Inicial' => 'Hora  Inicial',
-            'Hora Final' => 'Hora  Final',
-            'Fecha' => 'Fecha',
-            'usuario_ID' => 'Usuario  ID',
+            'HoraInicial' => 'Hora Inicial',
+            'HoraFinal' => 'Hora Final',
+            'UsuarioID' => 'Usuario ID',
         ];
     }
 
@@ -96,7 +101,7 @@ class Turno extends \yii\db\ActiveRecord
      */
     public function getUsuario()
     {
-        return $this->hasOne(Usuario::className(), ['ID' => 'usuario_ID']);
+        return $this->hasOne(Usuario::className(), ['ID' => 'UsuarioID']);
     }
 
     /**
@@ -121,5 +126,18 @@ class Turno extends \yii\db\ActiveRecord
     public function getVentas()
     {
         return $this->hasMany(Venta::className(), ['turno_ID' => 'ID']);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeSave($insert)
+    {
+        if(!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        $this->HoraInicial = new Expression('NOW()');
+        return true;
     }
 }

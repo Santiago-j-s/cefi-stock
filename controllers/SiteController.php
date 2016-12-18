@@ -8,6 +8,8 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Turno;
+use app\models\Usuario;
 
 class SiteController extends Controller
 {
@@ -68,18 +70,41 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionLogin()
+    public function actionIniciarTurno()
     {
-        if (!Yii::$app->user->isGuest) {
+        if (!Yii::$app->user->isGuest)
+        {
             return $this->goHome();
         }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        $turno = new Turno();
+        $login = new LoginForm();
+
+        $post = Yii::$app->request->post();
+        if ($login->load($post))
+        {
+            $isLoginValid = $login->validate();
+
+            if($isLoginValid) {
+                $turno->UsuarioID = $login->Usuario->ID;
+                $isTurnoSaved = $turno->save();
+                $isLogged = ($isTurnoSaved and $login->login());
+            }
+
+            if(isset($isLogged) and $isLogged === true) {
+                Yii::$app->session->setFlash('success', 'Turno Iniciado');
+                return $this->goHome();
+            } else {
+                Yii::$app->session->setFlash('danger', 'No se ha podido iniciar el turno');
+                Yii::error("Errores: \n"
+                            . 'Turno: ' . \yii\helpers\VarDumper::dumpAsString($turno->errors) . "\n"
+                            . 'LoginForm: ' . \yii\helpers\VarDumper::dumpAsString($login->errors));
+            }
         }
-        return $this->render('login', [
-            'model' => $model,
+
+        return $this->render('iniciar-turno', [
+            'turno' => $turno,
+            'login' => $login,
         ]);
     }
 

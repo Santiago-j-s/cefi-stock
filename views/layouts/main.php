@@ -1,15 +1,16 @@
 <?php
 
-/* @var $this \yii\web\View */
-/* @var $content string */
+    /* @var $this \yii\web\View */
+    /* @var $content string */
 
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
+    use yii\helpers\Html;
+    use yii\bootstrap\Nav;
+    use yii\bootstrap\NavBar;
+    use yii\bootstrap\Alert;
+    use yii\widgets\Breadcrumbs;
+    use app\assets\AppAsset;
 
-AppAsset::register($this);
+    AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -40,7 +41,7 @@ AppAsset::register($this);
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+                ['label' => 'Iniciar Turno', 'url' => ['/site/iniciar-turno']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
@@ -57,6 +58,15 @@ AppAsset::register($this);
     ?>
 
     <div class="container">
+        <?php
+            $flashes = Yii::$app->session->getAllFlashes();
+            foreach ($flashes as $key => $message) {
+                echo Alert::widget([
+                    'options' => ['class' => 'alert-' . $key],
+                    'body' => $message,
+                ]);
+            }
+        ?>
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
