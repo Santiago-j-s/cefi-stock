@@ -12,8 +12,8 @@ use Yii;
  * @property string $PrecioVenta
  * @property string $FechaUltModificacion
  * @property string $CodigoBarra
+ * @property Inventario $inventario
  *
- * @property Inventario[] $inventarios
  * @property PrecioProducto[] $precioProductos
  */
 class Producto extends \yii\db\ActiveRecord
@@ -45,19 +45,19 @@ class Producto extends \yii\db\ActiveRecord
     {
         return [
             'ID' => 'ID',
-            'Descripcion' => 'Descripcion',
-            'PrecioVenta' => 'Precio Venta',
-            'FechaUltModificacion' => 'Fecha Ult Modificacion',
-            'CodigoBarra' => 'Codigo Barra',
+            'Descripcion' => 'Descripción',
+            'PrecioVenta' => 'Precio de Venta',
+            'FechaUltModificacion' => 'Última Modificacion',
+            'CodigoBarra' => 'Código de Barras',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getInventarios()
+    public function getInventario()
     {
-        return $this->hasMany(Inventario::className(), ['ProductoID' => 'ID']);
+        return $this->hasOne(Inventario::className(), ['ProductoID' => 'ID']);
     }
 
     /**
