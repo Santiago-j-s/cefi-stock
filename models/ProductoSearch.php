@@ -20,7 +20,6 @@ class ProductoSearch extends Producto
     public function rules()
     {
         return [
-            [['ID'], 'integer'],
             [['Descripcion', 'FechaUltModificacion', 'CodigoBarra'], 'safe'],
             [['PrecioVenta', 'Cantidad'], 'number'],
         ];
@@ -33,15 +32,6 @@ class ProductoSearch extends Producto
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
-    }
-
-    public function getCantidad()
-    {
-        if(!isset($this->inventario)) {
-            return 0;
-        }
-
-        return $this->inventario->Cantidad;
     }
 
     /**
@@ -71,16 +61,14 @@ class ProductoSearch extends Producto
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'ID' => $this->ID,
             'PrecioVenta' => $this->PrecioVenta,
+            'Cantidad' => $this->Cantidad,
         ]);
 
         $query->andFilterWhere(['like', 'Descripcion', $this->Descripcion])
-            ->andFilterWhere(['like', 'FechaUltModificacion', $this->FechaUltModificacion])
             ->andFilterWhere(['like', 'CodigoBarra', $this->CodigoBarra]);
 
         $query->joinWith(['inventario']);
-        $query->andFilterWhere(['inventario.Cantidad' => $this->Cantidad]);
 
         return $dataProvider;
     }

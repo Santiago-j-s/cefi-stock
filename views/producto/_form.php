@@ -1,22 +1,20 @@
 <?php
-
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Producto */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yii\bootstrap\ActiveForm */
 ?>
-
 <div class="producto-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'Descripcion')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'PrecioVenta')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'FechaUltModificacion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'PrecioVenta', [
+        'inputTemplate' => '<div class="input-group"><span class="input-group-addon">$</span>{input}</div>',
+    ])->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'CodigoBarra')->textInput(['maxlength' => true]) ?>
 

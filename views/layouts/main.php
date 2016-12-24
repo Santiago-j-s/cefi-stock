@@ -9,6 +9,7 @@
     use yii\bootstrap\Alert;
     use yii\widgets\Breadcrumbs;
     use app\assets\AppAsset;
+    use mdm\admin\components\Helper;
 
     AppAsset::register($this);
 ?>
@@ -27,35 +28,38 @@
 
 <div class="wrap">
     <?php
+    $username = !\Yii::$app->user->isGuest ? \Yii::$app->user->identity->NombreUsuario : null;
+    
+    $menuItems = [
+        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'About', 'url' => ['/site/about']],
+        ['label' => 'Productos', 'url' => ['/producto/index']],
+        ['label' => 'Admin', 'url' => ['/admin/']],
+        ['label' => 'Iniciar Turno', 'url' => ['/site/iniciar-turno'], 'visible' => \Yii::$app->user->isGuest],
+        [
+            'label' => 'Logout (' . $username . ')',
+            'url' => ['/site/logout'],
+            'linkOptions' => ['data-method' => 'post']
+        ],
+    ];
+
+    // Filtrar los items de menú según los permisos del usuario
+    $menuItems = Helper::filter($menuItems);
+
     NavBar::begin([
         'brandLabel' => 'CEFI',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar navbar-top',
+            'class' => 'navbar',
         ],
     ]);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Iniciar Turno', 'url' => ['/site/iniciar-turno']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->NombreUsuario . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $menuItems,
     ]);
     NavBar::end();
     ?>
-
+    
     <div class="container">
         <?php
             $flashes = Yii::$app->session->getAllFlashes();

@@ -6,6 +6,21 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'modules' => [
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+            'layout' => 'left-menu',
+            'controllerMap' => [
+                'assignment' => [
+                    'class' => 'mdm\admin\controllers\AssignmentController',
+                    'userClassName' => 'app\models\Usuario',
+                    'idField' => 'ID',
+                    'usernameField' => 'NombreUsuario',
+
+                ],
+            ],
+        ],
+    ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -18,6 +33,7 @@ $config = [
             'identityClass' => 'app\models\Usuario',
             'enableSession' => true,
             'enableAutoLogin' => true,
+            'loginUrl' => ['/site/iniciar-turno'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -38,7 +54,7 @@ $config = [
                 ],
             ],
         ],
-        'db' => require(__DIR__ . '/db.php'),
+        'db' => require(__DIR__ . '/db_local.php'),
         
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -47,7 +63,23 @@ $config = [
             'rules' => [
             ],
         ],
+
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            'defaultRoles' => ['Guest'],
+        ],
+
+        'formatter' => [
+            'currencyCode' => 'ARS',
+            'locale' => 'es-AR',
+        ],
     ],
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+        ],
+    ],
+    'language' => 'es-AR',
     'params' => $params,
 ];
 

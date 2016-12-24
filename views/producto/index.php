@@ -11,7 +11,6 @@ $this->title = 'Productos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="producto-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -22,12 +21,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'ID',
+            [
+                'attribute' => '#',
+                'value' => 'ID',
+            ],
             'Descripcion',
-            'PrecioVenta',
+            'PrecioVenta:currency',
             'Cantidad',
             //'FechaUltModificacion',
-            //'CodigoBarra',
+            'CodigoBarra',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

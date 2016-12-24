@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "producto".
@@ -35,6 +36,7 @@ class Producto extends \yii\db\ActiveRecord
             [['PrecioVenta'], 'number'],
             [['Descripcion', 'FechaUltModificacion'], 'string', 'max' => 45],
             [['CodigoBarra'], 'string', 'max' => 13],
+            [['PrecioVenta', 'Descripcion'], 'required'],
         ];
     }
 
@@ -66,5 +68,32 @@ class Producto extends \yii\db\ActiveRecord
     public function getPrecioProductos()
     {
         return $this->hasMany(PrecioProducto::className(), ['producto_ID' => 'ID']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCantidad()
+    {
+        $inventario = $this->inventario;
+        if(!isset($inventario))
+        {
+            return 0;
+        }
+        return $inventario->Cantidad;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function beforeSave($insert)
+    {
+        if(!parent::beforeSave($insert)) {
+            return false;
+        }
+        
+        $this->FechaUltModificacion = new Expression('NOW()');
+        
+        return true;
     }
 }
