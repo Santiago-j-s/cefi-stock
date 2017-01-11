@@ -32,7 +32,7 @@
     
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'About', 'url' => ['/site/about']],
+        ['label' => 'Cuenta', 'url' => ['/cuenta/']],
         ['label' => 'Productos', 'url' => ['/producto/index']],
         ['label' => 'Admin', 'url' => ['/admin/']],
         ['label' => 'Iniciar Turno', 'url' => ['/site/iniciar-turno'], 'visible' => \Yii::$app->user->isGuest],

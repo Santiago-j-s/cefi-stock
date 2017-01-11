@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 19, 2016 at 01:14 AM
+-- Generation Time: Jan 11, 2017 at 12:31 AM
 -- Server version: 10.0.28-MariaDB-0ubuntu0.16.04.1
 -- PHP Version: 7.0.8-0ubuntu0.16.04.3
 
@@ -23,13 +23,65 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `auth_assignment`
+--
+
+CREATE TABLE `auth_assignment` (
+  `item_name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auth_item`
+--
+
+CREATE TABLE `auth_item` (
+  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `type` int(11) NOT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `rule_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `data` text COLLATE utf8_unicode_ci,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auth_item_child`
+--
+
+CREATE TABLE `auth_item_child` (
+  `parent` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `child` varchar(64) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `auth_rule`
+--
+
+CREATE TABLE `auth_rule` (
+  `name` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `data` text COLLATE utf8_unicode_ci,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `caja`
 --
 
 CREATE TABLE `caja` (
   `ID` int(11) NOT NULL,
-  `Monto` decimal(10,0) DEFAULT NULL,
-  `FechaUltMovimiento` datetime DEFAULT NULL
+  `Monto` decimal(19,4) NOT NULL,
+  `FechaUltMovimiento` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -42,7 +94,7 @@ CREATE TABLE `factura` (
   `ID` int(11) NOT NULL,
   `Proveedor` varchar(45) DEFAULT NULL,
   `NumeroFactura` varchar(45) DEFAULT NULL,
-  `Monto` decimal(10,0) DEFAULT NULL,
+  `Monto` decimal(19,4) DEFAULT NULL,
   `Fecha` datetime DEFAULT NULL,
   `FechaAlta` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -71,7 +123,7 @@ CREATE TABLE `linea_venta` (
   `InventarioID` int(11) NOT NULL,
   `VentaID` int(11) NOT NULL,
   `Cantidad` int(11) DEFAULT NULL,
-  `Subtotal` decimal(10,0) DEFAULT NULL
+  `Subtotal` decimal(19,4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -82,7 +134,7 @@ CREATE TABLE `linea_venta` (
 
 CREATE TABLE `movimiento` (
   `ID` int(11) NOT NULL,
-  `Monto` decimal(10,0) DEFAULT NULL,
+  `Monto` decimal(19,4) DEFAULT NULL,
   `Tipo` varchar(45) DEFAULT NULL,
   `Fecha` datetime DEFAULT NULL,
   `CajaID` int(11) NOT NULL,
@@ -99,7 +151,7 @@ CREATE TABLE `movimiento` (
 CREATE TABLE `pago` (
   `ID` int(11) NOT NULL,
   `Fecha` datetime DEFAULT NULL,
-  `Monto` decimal(10,0) DEFAULT NULL,
+  `Monto` decimal(19,4) DEFAULT NULL,
   `turno_ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -124,7 +176,7 @@ CREATE TABLE `pago_factura` (
 CREATE TABLE `precio_producto` (
   `producto_ID` int(11) NOT NULL,
   `FechaInicio` datetime NOT NULL,
-  `Precio` decimal(10,0) DEFAULT NULL,
+  `Precio` decimal(19,4) DEFAULT NULL,
   `FechaFinal` datetime DEFAULT NULL,
   `turno_ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -138,7 +190,7 @@ CREATE TABLE `precio_producto` (
 CREATE TABLE `producto` (
   `ID` int(11) NOT NULL,
   `Descripcion` varchar(45) DEFAULT NULL,
-  `PrecioVenta` decimal(10,0) DEFAULT NULL,
+  `PrecioVenta` decimal(19,4) DEFAULT NULL,
   `FechaUltModificacion` varchar(45) DEFAULT NULL,
   `CodigoBarra` varchar(13) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -166,8 +218,8 @@ CREATE TABLE `registro_producto` (
 
 CREATE TABLE `sobre` (
   `ID` int(11) NOT NULL,
-  `Monto` varchar(45) DEFAULT NULL,
-  `FechaUltMovimiento` varchar(45) DEFAULT NULL
+  `Monto` decimal(19,4) DEFAULT NULL,
+  `FechaUltMovimiento` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -183,22 +235,6 @@ CREATE TABLE `turno` (
   `UsuarioID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `turno`
---
-
-INSERT INTO `turno` (`ID`, `HoraInicial`, `HoraFinal`, `UsuarioID`) VALUES
-(1, '2016-12-18 19:29:27', NULL, 1),
-(2, '2016-12-18 19:32:08', NULL, 1),
-(3, '2016-12-18 19:33:38', NULL, 1),
-(4, '2016-12-18 19:34:09', NULL, 1),
-(5, '2016-12-18 19:39:16', NULL, 1),
-(6, '2016-12-18 19:44:23', NULL, 1),
-(7, '2016-12-18 19:44:36', NULL, 1),
-(8, '2016-12-18 19:46:01', NULL, 1),
-(9, '2016-12-18 19:47:16', NULL, 1),
-(10, '2016-12-18 22:08:53', NULL, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -209,8 +245,8 @@ CREATE TABLE `turno_caja` (
   `ID` int(11) NOT NULL,
   `caja_ID` int(11) NOT NULL,
   `turno_ID` int(11) NOT NULL,
-  `MontoInicial` decimal(10,0) DEFAULT NULL,
-  `MontoFinal` decimal(10,0) DEFAULT NULL
+  `MontoInicial` decimal(19,4) DEFAULT NULL,
+  `MontoFinal` decimal(19,4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -240,13 +276,6 @@ CREATE TABLE `usuario` (
   `AuthKey` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `usuario`
---
-
-INSERT INTO `usuario` (`ID`, `NombreUsuario`, `Password`, `AuthKey`) VALUES
-(1, 'admin', '$2y$13$i43hG0tcy9h989BL3RTnIuZlSXezBJmijB8dmaPZU0Pfp684VSM06', '7T4TiZZGyDVfQmNkkqK-QtvwvivmeSsP');
-
 -- --------------------------------------------------------
 
 --
@@ -266,7 +295,7 @@ CREATE TABLE `vendedor` (
 
 CREATE TABLE `venta` (
   `ID` int(11) NOT NULL,
-  `Monto` decimal(10,0) DEFAULT NULL,
+  `Monto` decimal(19,4) DEFAULT NULL,
   `Factura` varchar(45) DEFAULT NULL,
   `Fecha` datetime DEFAULT NULL,
   `turno_ID` int(11) NOT NULL
@@ -275,6 +304,33 @@ CREATE TABLE `venta` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `auth_assignment`
+--
+ALTER TABLE `auth_assignment`
+  ADD PRIMARY KEY (`item_name`,`user_id`);
+
+--
+-- Indexes for table `auth_item`
+--
+ALTER TABLE `auth_item`
+  ADD PRIMARY KEY (`name`),
+  ADD KEY `rule_name` (`rule_name`),
+  ADD KEY `idx-auth_item-type` (`type`);
+
+--
+-- Indexes for table `auth_item_child`
+--
+ALTER TABLE `auth_item_child`
+  ADD PRIMARY KEY (`parent`,`child`),
+  ADD KEY `child` (`child`);
+
+--
+-- Indexes for table `auth_rule`
+--
+ALTER TABLE `auth_rule`
+  ADD PRIMARY KEY (`name`);
 
 --
 -- Indexes for table `caja`
@@ -403,7 +459,7 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT for table `caja`
 --
 ALTER TABLE `caja`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `factura`
 --
@@ -438,17 +494,17 @@ ALTER TABLE `pago_factura`
 -- AUTO_INCREMENT for table `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `sobre`
 --
 ALTER TABLE `sobre`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `turno`
 --
 ALTER TABLE `turno`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `turno_vendedor`
 --
@@ -462,6 +518,25 @@ ALTER TABLE `usuario`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `auth_assignment`
+--
+ALTER TABLE `auth_assignment`
+  ADD CONSTRAINT `auth_assignment_ibfk_1` FOREIGN KEY (`item_name`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `auth_item`
+--
+ALTER TABLE `auth_item`
+  ADD CONSTRAINT `auth_item_ibfk_1` FOREIGN KEY (`rule_name`) REFERENCES `auth_rule` (`name`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `auth_item_child`
+--
+ALTER TABLE `auth_item_child`
+  ADD CONSTRAINT `auth_item_child_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `auth_item_child_ibfk_2` FOREIGN KEY (`child`) REFERENCES `auth_item` (`name`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `inventario`

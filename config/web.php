@@ -80,8 +80,7 @@ $config = [
     ],
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
-        'allowActions' => [
-        ],
+        'allowActions' => [],
     ],
     'language' => 'es-AR',
     'params' => $params,
