@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Caja;
+use app\models\Cuenta;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -22,10 +23,10 @@ class CuentaController extends Controller
      */
     public function actionView()
     {
-        $model = $this->findModel();
+        $model = new Cuenta();
 
-        if($model === null) {
-            return $this->redirect(['iniciar-caja']);
+        if(!$model->iniciado()) {
+            return $this->redirect(['iniciar-cuenta']);
         }
 
         return $this->render('view', [
@@ -42,9 +43,9 @@ class CuentaController extends Controller
      */
     public function actionUpdate()
     {
-        $model = $this->findModel();
+        $model = new Cuenta();
 
-        if($model === null) {
+        if(!$model->iniciado()) {
             throw new NotFoundHttpException('No se encuentra la página');
         }
 
@@ -62,33 +63,17 @@ class CuentaController extends Controller
      * 
      * @return mixed
      */
-    public function actionIniciarCaja()
+    public function actionIniciarCuenta()
     {
-        $model = $this->findModel();
-
-        if($model !== null) {
-            return $this->redirect('update');
-        }
-        
-        $model = new Caja();
-        $model->ID = 1;
+        $model = new Cuenta();
+        $model->iniciarCuenta();
 
         if($model->load(Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->session->setFlash('success', 'Se ha iniciado un nuevo monto');
-            
+       
             return $this->redirect(['view']);
         }
         
         return $this->render('iniciar', ['model' => $model]);
-    }
-
-    /**
-     * Finds the Caja model based on its primary key value.
-     * @return Caja the loaded model
-     */
-    protected function findModel()
-    {
-        $model = Caja::findOne(1);
-        return $model;
     }
 }

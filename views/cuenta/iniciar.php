@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Caja */
+/* @var $caja app\models\Caja */
 
 $this->title = 'Iniciar Caja';
 $this->params['breadcrumbs'][] = $this->title;

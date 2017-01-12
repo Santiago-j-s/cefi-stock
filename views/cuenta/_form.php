@@ -4,18 +4,19 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Caja */
+/* @var $model app\models\Cuenta */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="caja-form">
+<div class="cuenta-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'Monto')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'MontoCaja')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'MontoSobre')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton(!$model->iniciado() ? 'Crear' : 'Actualizar', ['class' => !$model->iniciado() ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

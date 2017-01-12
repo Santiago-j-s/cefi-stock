@@ -33,9 +33,8 @@ class Caja extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ID'], 'safe'],
+            [['ID', 'FechaUltMovimiento'], 'safe'],
             [['Monto'], 'number'],
-            [['FechaUltMovimiento'], 'safe'],
         ];
     }
 

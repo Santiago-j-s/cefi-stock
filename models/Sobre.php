@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "sobre".
@@ -29,7 +32,8 @@ class Sobre extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Monto', 'FechaUltMovimiento'], 'string', 'max' => 45],
+            [['ID', 'FechaUltMovimiento'], 'safe'],
+            [['Monto'], 'number'],
         ];
     }
 
@@ -42,6 +46,20 @@ class Sobre extends \yii\db\ActiveRecord
             'ID' => 'ID',
             'Monto' => 'Monto',
             'FechaUltMovimiento' => 'Fecha Ult Movimiento',
+        ];
+    }
+    
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['FechaUltMovimiento'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['FechaUltMovimiento'],
+                ],
+                'value' => new Expression('NOW()'),
+            ]
         ];
     }
 
