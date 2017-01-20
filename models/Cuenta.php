@@ -12,10 +12,6 @@ use yii\base\Model;
  */
 class Cuenta extends Model
 {
-    const SCENARIO_DEFAULT = 'default';
-    const SCENARIO_RETIRO = 'retiro';
-    const SCENARIO_DEPOSITO = 'deposito';
-
     //TODO: Depósitos y retiros, mirar cefi_reglas.md
     public $montoDeposito;
     public $montoRetiro;
@@ -29,14 +25,8 @@ class Cuenta extends Model
     public function rules()
     {
         return [
-            [['MontoCaja', 'MontoSobre'], 'number', 'on' => self::SCENARIO_DEFAULT],
-            [['MontoCaja', 'MontoSobre'], 'required', 'on' => self::SCENARIO_DEFAULT],
-
-            [['montoRetiro'], 'number', 'on' => self::SCENARIO_RETIRO], 
-            [['montoRetiro'], 'required', 'on' => self::SCENARIO_RETIRO],
- 
-            [['montoDeposito'], 'number', 'on' => self::SCENARIO_DEPOSITO],
-            [['montoDeposito'], 'required', 'on' => self::SCENARIO_DEPOSITO],  
+            [['MontoCaja', 'MontoSobre'], 'number'],
+            [['MontoCaja', 'MontoSobre'], 'required'],
         ];
     }
 
@@ -109,6 +99,58 @@ class Cuenta extends Model
     public function setMontoSobre($value)
     {
         $this->_sobre->Monto = $value;
+    }
+
+    /**
+     * Retira dinero de la caja y lo pone en sobre
+     *
+     * @param \yii\base\DynamicModel modelo que contiene el monto a transferir
+     */
+    public function retiro($retiro)
+    {
+        $montoActualCaja = $this->MontoCaja;
+        $montoActualSobre = $this->MontoSobre;
+
+        $valor = $retiro->monto;
+
+        if(bccomp($valor, $montoActualCaja) === 1) {
+            $retiro->addError(
+                'monto',
+                'El valor ingresado debe ser menor al monto actual de la caja'
+            );
+            return false;
+        }
+
+        $this->MontoCaja = bcsub($montoActualCaja, $valor);
+        $this->MontoSobre = bcadd($montoActualSobre, $valor);
+
+        return $this->save();
+    }
+    
+    /**
+     * Retira dinero del sobre y lo pone en caja
+     *
+     * @param \yii\base\DynamicModel modelo que contiene el monto a transferir
+     */
+    public function deposito($deposito)
+    {
+        $montoActualCaja = $this->MontoCaja;
+        $montoActualSobre = $this->MontoSobre;
+
+        $valor = $deposito->monto;
+
+        if(bccomp($valor, $montoActualSobre) === 1) {
+            $deposito->addError(
+                'monto',
+                'El valor ingresado debe ser menor al monto actual de la caja'
+            );
+            return false;
+        }
+
+        $this->MontoSobre = bcsub($montoActualSobre, $valor);
+        $this->MontoCaja = bcadd($montoActualCaja, $valor);
+
+        return $this->save();
     }
 
     public function getFechaUltMovimientoCaja()

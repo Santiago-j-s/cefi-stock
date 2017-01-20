@@ -76,6 +76,7 @@ $config = [
         'formatter' => [
             'currencyCode' => 'ARS',
             'locale' => 'es-AR',
+            'decimalSeparator' => ',',
         ],
     ],
     'as access' => [
@@ -85,6 +86,8 @@ $config = [
     'language' => 'es-AR',
     'params' => $params,
 ];
+
+bcscale(2); // 2 decimales de precisión para todas las funciones de BCMATH
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment

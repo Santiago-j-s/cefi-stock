@@ -16,6 +16,4 @@
 
 * Desean tener un resumen de cuenta de proveedores con las facturas pagas e impagas (las facturas han de registrarse)
 
-* Al hacerse retiros y depósitos el dinero total (suma de sobre y caja) no debe cambiar.
-
 * Tienen una planilla con la que manejan los turnos (fecha, entrada, salida, nombre)

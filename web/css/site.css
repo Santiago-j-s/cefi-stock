@@ -117,3 +117,5 @@ a.desc:after {
 .navbar {
     margin-bottom: 0;
 }
+
+.top-space { margin-top:20px; }

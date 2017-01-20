@@ -3,11 +3,11 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Caja */
+/* @var $model app\models\Cuenta */
 
 $this->title = 'Actualizar Monto';
 $this->params['breadcrumbs'][] = ['label' => 'Estado de Caja', 'url' => ['view']];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = 'Modificar Monto';
 ?>
 <div class="caja-update">
 

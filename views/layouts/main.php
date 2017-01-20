@@ -3,6 +3,7 @@
     /* @var $this \yii\web\View */
     /* @var $content string */
 
+    use kartik\nav\NavX;
     use yii\helpers\Html;
     use yii\bootstrap\Nav;
     use yii\bootstrap\NavBar;
@@ -32,7 +33,10 @@
     
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'Cuenta', 'url' => ['/cuenta/']],
+        ['label' => 'Cuenta', 'items' => [
+            ['label' => 'Estado', 'url' => '/cuenta/'],
+            ['label' => 'Modificar Montos', 'url' => 'modificar-monto'],
+        ]],
         ['label' => 'Productos', 'url' => ['/producto/index']],
         ['label' => 'Admin', 'url' => ['/admin/']],
         ['label' => 'Iniciar Turno', 'url' => ['/site/iniciar-turno'], 'visible' => \Yii::$app->user->isGuest],
@@ -53,7 +57,7 @@
             'class' => 'navbar',
         ],
     ]);
-    echo Nav::widget([
+    echo NavX::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
     ]);
