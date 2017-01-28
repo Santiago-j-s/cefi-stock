@@ -35,7 +35,7 @@
         ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'Cuenta', 'items' => [
             ['label' => 'Estado', 'url' => '/cuenta/'],
-            ['label' => 'Modificar Montos', 'url' => 'modificar-monto'],
+            ['label' => 'Modificar Montos', 'url' => '/cuenta/modificar-monto'],
         ]],
         ['label' => 'Productos', 'url' => ['/producto/index']],
         ['label' => 'Admin', 'url' => ['/admin/']],

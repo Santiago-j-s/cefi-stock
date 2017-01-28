@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Html;
+use yii\bootstrap\Html;
 use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -19,7 +19,7 @@ use yii\bootstrap\ActiveForm;
     <?= $form->field($model, 'CodigoBarra')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

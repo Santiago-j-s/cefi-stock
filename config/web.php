@@ -77,6 +77,7 @@ $config = [
             'currencyCode' => 'ARS',
             'locale' => 'es-AR',
             'decimalSeparator' => ',',
+            'thousandSeparator' => ' ',
         ],
     ],
     'as access' => [

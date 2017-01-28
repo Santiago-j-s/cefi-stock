@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
         'action' => ['index'],
         'method' => 'get',
     ]); ?>
-
+bs3-ale
     <?= $form->field($model, 'ID') ?>
 
     <?= $form->field($model, 'Descripcion') ?>

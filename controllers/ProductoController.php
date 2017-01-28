@@ -5,6 +5,8 @@ namespace app\controllers;
 use Yii;
 use app\models\Producto;
 use app\models\ProductoSearch;
+use yii\base\DynamicModel;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -72,6 +74,60 @@ class ProductoController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionIngreso()
+    {
+        $model = new Producto(['scenario' => Producto::SCENARIO_INGRESO]);
+
+        $sesion = Yii::$app->session;
+        $productos = $sesion->get('productos', []);
+        
+        $descripcionProductos = Producto::getDescripciones();
+        $mapDescripcionProductos = array_combine($descripcionProductos, $descripcionProductos);
+        
+        $dataProvider = Producto::getIngresoDataProvider($productos);
+        
+        return $this->render('ingreso', [
+            'dataProvider' => $dataProvider,
+            'model' => $model,
+            'descripcionesProducto' => $mapDescripcionProductos,
+        ]);
+    }
+
+    public function actionAddProducto()
+    {
+        $producto = new Producto(['scenario' => Producto::SCENARIO_INGRESO]);
+
+        $sesion = Yii::$app->session;
+        //$sesion->set('productos', null);
+        $productos = $sesion->get('productos', []);
+
+        $request = Yii::$app->request;
+        if($request->isPost) {
+            if($producto->load($request->post()) && $producto->validate()) {
+                // TODO: Organizar mejor el código
+
+                $descripcion = $producto->Descripcion;
+                if(!array_key_exists($descripcion, $productos)) {
+                    $productos[$descripcion] = $producto;
+                } else {
+                    $productos[$descripcion]->Cantidad += $producto->Cantidad;
+                }
+
+                $sesion->set('productos', $productos);
+            }
+
+            $dataProvider = Producto::getIngresoDataProvider($productos);
+        }
+
+        if($request->isPjax) {
+            return $this->renderPartial('grid', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+
+        return $this->redirect('ingreso');
     }
 
     /**

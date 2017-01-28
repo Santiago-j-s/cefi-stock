@@ -4,6 +4,8 @@ namespace app\models;
 
 use Yii;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
+use yii\data\ArrayDataProvider;
 
 /**
  * This is the model class for table "producto".
@@ -19,12 +21,36 @@ use yii\db\Expression;
  */
 class Producto extends \yii\db\ActiveRecord
 {
+    const SCENARIO_DEFAULT = 'default';
+    const SCENARIO_INGRESO = 'ingreso';
+
+    private $_cantidad = null;
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return 'producto';
+    }
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+     
+        $scenarios[self::SCENARIO_DEFAULT] = [
+            'PrecioVenta',
+            'Descripcion',
+            'FechaUltModificacion',
+            'CodigoBarra',
+        ];
+
+        $scenarios[self::SCENARIO_INGRESO] = [
+            'Cantidad',
+            'Descripcion',
+        ];
+
+        return $scenarios;
     }
 
     /**
@@ -34,7 +60,9 @@ class Producto extends \yii\db\ActiveRecord
     {
         return [
             [['PrecioVenta'], 'number'],
-            [['Descripcion', 'FechaUltModificacion'], 'string', 'max' => 45],
+            [['Cantidad'], 'number', 'min' => 0],
+            [['FechaUltModificacion'], 'string', 'max' => 45],
+            [['Descripcion'], 'string', 'max' => 100],
             [['CodigoBarra'], 'string', 'max' => 13],
             [['PrecioVenta', 'Descripcion'], 'required'],
         ];
@@ -75,12 +103,44 @@ class Producto extends \yii\db\ActiveRecord
      */
     public function getCantidad()
     {
-        $inventario = $this->inventario;
-        if(!isset($inventario))
-        {
-            return 0;
+        if($this->_cantidad === null) {
+            $inventario = $this->inventario;
+            $this->_cantidad = ($inventario !== null) ? $inventario->Cantidad : 0;
         }
-        return $inventario->Cantidad;
+
+        return $this->_cantidad;
+    }
+
+    /**
+     * Permite setear la cantidad disponible de un producto
+     */
+    public function setCantidad($value)
+    {
+        $this->_cantidad = $value;
+    }
+
+    /**
+     * Devuelve un array con todas las descripciones de productos
+     * @return array
+     */
+    public static function getDescripciones()
+    {
+        return ArrayHelper::getColumn(self::find()->all(), 'Descripcion');
+    }
+
+    /**
+     * @return ArrayDataProvider
+     */
+    public static function getIngresoDataProvider($productos)
+    {
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $productos,
+            'sort' => [
+                'attributes' => ['Descripcion', 'Cantidad'],
+            ]
+        ]);
+
+        return $dataProvider;
     }
 
     /**
