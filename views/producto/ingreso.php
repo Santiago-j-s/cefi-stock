@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Productos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $js = <<<JS
-    select = $('#producto-descripcion');
+    select = $('#producto-id');
     form = $('#form-ingreso');
     console.log(select);
     console.log(form);
@@ -49,7 +49,7 @@ $this->registerJs($js);
                     ],
                 ]); ?>
 
-                    <?= $form->field($model, 'Descripcion')->widget(Select2::classname(), [
+                    <?= $form->field($model, 'ID')->widget(Select2::classname(), [
                         'id' => 'select-descripcion',
                         'data' => $descripcionesProducto,
                         'options' => [

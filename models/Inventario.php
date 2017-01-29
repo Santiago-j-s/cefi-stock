@@ -10,7 +10,6 @@ use Yii;
  * @property integer $ID
  * @property integer $ProductoID
  * @property integer $Cantidad
- * @property string $Unidad
  *
  * @property Producto $producto
  * @property LineaVenta[] $lineaVentas
@@ -34,7 +33,6 @@ class Inventario extends \yii\db\ActiveRecord
         return [
             [['ProductoID'], 'required'],
             [['ProductoID', 'Cantidad'], 'integer'],
-            [['Unidad'], 'string', 'max' => 45],
             [['ProductoID'], 'exist', 'skipOnError' => true, 'targetClass' => Producto::className(), 'targetAttribute' => ['ProductoID' => 'ID']],
         ];
     }

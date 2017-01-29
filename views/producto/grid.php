@@ -10,7 +10,8 @@ use yii\bootstrap\Html;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\DataProvider */
 
-$buttonOptions =  ['class' => 'btn btn-primary pull-right'];
+$confirmarOptions =  ['class' => 'btn btn-primary pull-right', 'style' => 'margin: 10px;'];
+$resetOptions = ['class' => 'btn btn-danger pull-right', 'style' => 'margin:10px;'];
 
 if($dataProvider->count < 1) {
     $buttonOptions['disabled'] = true;
@@ -24,8 +25,15 @@ if($dataProvider->count < 1) {
         'Cantidad', 
     ],
 ]); ?>
-<?= Html::beginForm(['confirmar-ingreso'], 'post') ?>
-    <div class="form-group">
-        <?= Html::submitButton('Confirmar', $buttonOptions) ?>
-    </div>
-<?= Html::endForm() ?>
+<div class="row">
+    <?= Html::beginForm(['confirmar-ingreso'], 'post') ?>
+        <div class="form-group">
+            <?= Html::submitButton('Confirmar', $confirmarOptions) ?>
+        </div>
+    <?= Html::endForm() ?>
+    <?= Html::beginForm(['reset-ingreso'], 'post') ?>
+        <div class="form-group">
+            <?= Html::submitButton('Reset', $resetOptions) ?>
+        </div>
+    <?= Html::endForm() ?>
+</div>

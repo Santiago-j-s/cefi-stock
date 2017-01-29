@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\data\ArrayDataProvider;
@@ -46,11 +48,25 @@ class Producto extends \yii\db\ActiveRecord
         ];
 
         $scenarios[self::SCENARIO_INGRESO] = [
+            'ID',
             'Cantidad',
-            'Descripcion',
         ];
 
         return $scenarios;
+    }
+    
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['FechaUltModificacion'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['FechaUltModificacion'],
+                ],
+                'value' => new Expression('NOW()'),
+            ]
+        ];
     }
 
     /**
@@ -60,8 +76,8 @@ class Producto extends \yii\db\ActiveRecord
     {
         return [
             [['PrecioVenta'], 'number'],
+            [['FechaUltModificacion'], 'safe'],
             [['Cantidad'], 'number', 'min' => 0],
-            [['FechaUltModificacion'], 'string', 'max' => 45],
             [['Descripcion'], 'string', 'max' => 100],
             [['CodigoBarra'], 'string', 'max' => 13],
             [['PrecioVenta', 'Descripcion'], 'required'],
@@ -116,6 +132,10 @@ class Producto extends \yii\db\ActiveRecord
      */
     public function setCantidad($value)
     {
+        if(isset($this->inventario)) {
+            $this->inventario->Cantidad = $value;
+        }
+
         $this->_cantidad = $value;
     }
 
@@ -129,6 +149,55 @@ class Producto extends \yii\db\ActiveRecord
     }
 
     /**
+     * Devuelve el modelo con la descripción dada 
+     *
+     * @return \yii\db\ActiveRecord
+     */
+    public static function findByDescripcion($descripcion)
+    {
+        return findOne(['Descripcion', $descripcion]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $transaction = Yii::$app->db->beginTransaction();
+        
+        try {
+            if(!parent::save()) {
+                $mensaje = "Producto: " . \yii\helpers\VarDumper::dumpAsString($this);
+                \Yii::warning($mensaje);
+                throw new \Exception("No se pudo guardar el producto");
+            }
+
+            $inventario = $this->inventario;
+            if(!isset($inventario)) {
+                $inventario = new Inventario();
+                $inventario->ProductoID = $this->ID;
+            }
+
+            $inventario->Cantidad += $this->_cantidad;
+            
+            if(!$inventario->save()) {
+                $mensaje = \yii\helpers\VarDumper::dumpAsString($inventario);
+                \Yii::error($mensaje);
+                throw new \Exception("No se pudo guardar el inventario");    
+            }
+
+            $transaction->commit();
+            return true;
+        } catch (\Exception $e) { // For compatibility with PHP 5.x
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
+        }
+    }
+
+    /**
      * @return ArrayDataProvider
      */
     public static function getIngresoDataProvider($productos)
@@ -137,23 +206,22 @@ class Producto extends \yii\db\ActiveRecord
             'allModels' => $productos,
             'sort' => [
                 'attributes' => ['Descripcion', 'Cantidad'],
-            ]
+           ]
         ]);
 
         return $dataProvider;
     }
 
     /**
-     * @inheritDoc
-     */
-    public function beforeSave($insert)
+     * Guarda en db los cambios en las cantidades de cada producto 
+     * en $productos
+     *
+     * Para cada instancia de esta clase en '$productos':
+    */
+    public static function registrarIngreso($productos)
     {
-        if(!parent::beforeSave($insert)) {
-            return false;
+        foreach ($productos as $producto) {
+            $producto->save();
         }
-        
-        $this->FechaUltModificacion = new Expression('NOW()');
-        
-        return true;
     }
 }

@@ -38,7 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'FechaUltModificacion',
                 'CodigoBarra',
 
-                ['class' => 'yii\grid\ActionColumn'],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{view} {update}',
+                ],
             ],
         ]); ?>
     <?php Pjax::end() ?>

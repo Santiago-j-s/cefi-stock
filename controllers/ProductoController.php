@@ -7,6 +7,7 @@ use app\models\Producto;
 use app\models\ProductoSearch;
 use yii\base\DynamicModel;
 use yii\data\ArrayDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -76,16 +77,26 @@ class ProductoController extends Controller
         }
     }
 
+    /**
+     * Permite registrar el ingreso de productos
+     *
+     * Los productos ingresados junto con sus cantidades
+     * se almacenan en la variable de sesión productos
+     *
+     * @return mixed
+     */
     public function actionIngreso()
     {
         $model = new Producto(['scenario' => Producto::SCENARIO_INGRESO]);
 
         $sesion = Yii::$app->session;
         $productos = $sesion->get('productos', []);
+
+        $mensaje = \yii\helpers\VarDumper::dumpAsString($productos);
+        \Yii::error($mensaje);
         
-        $descripcionProductos = Producto::getDescripciones();
-        $mapDescripcionProductos = array_combine($descripcionProductos, $descripcionProductos);
-        
+        $descripcionProductos = Producto::find()->all();
+        $mapDescripcionProductos = ArrayHelper::map($descripcionProductos, 'ID', 'Descripcion');
         $dataProvider = Producto::getIngresoDataProvider($productos);
         
         return $this->render('ingreso', [
@@ -95,6 +106,13 @@ class ProductoController extends Controller
         ]);
     }
 
+    /**
+     * Añade un producto y su cantidad a los productos ingresados
+     * 
+     * Actualiza la variable de sesión 'productos'
+     *
+     * @return mixed el GridView con los productos 
+     */
     public function actionAddProducto()
     {
         $producto = new Producto(['scenario' => Producto::SCENARIO_INGRESO]);
@@ -103,17 +121,26 @@ class ProductoController extends Controller
         //$sesion->set('productos', null);
         $productos = $sesion->get('productos', []);
 
+        $mensaje = \yii\helpers\VarDumper::dumpAsString($productos);
+        \Yii::error($mensaje);
+
         $request = Yii::$app->request;
         if($request->isPost) {
             if($producto->load($request->post()) && $producto->validate()) {
-                // TODO: Organizar mejor el código
+                $cantidad = $producto->Cantidad;
+                $id = $producto->ID;
 
-                $descripcion = $producto->Descripcion;
-                if(!array_key_exists($descripcion, $productos)) {
-                    $productos[$descripcion] = $producto;
-                } else {
-                    $productos[$descripcion]->Cantidad += $producto->Cantidad;
+                if(array_key_exists($id, $productos)) {
+                    $cantidad += $productos[$id]->Cantidad;
                 }
+
+                $producto = Producto::findOne(['ID' => $id]);
+                $producto->Cantidad = $cantidad;
+
+                $productos = array_replace($productos, [$id => $producto]);
+
+                $mensaje = "Producto Añadido:\n" . \yii\helpers\VarDumper::dumpAsString($producto);
+                \Yii::trace($mensaje);
 
                 $sesion->set('productos', $productos);
             }
@@ -128,6 +155,22 @@ class ProductoController extends Controller
         }
 
         return $this->redirect('ingreso');
+    }
+
+    public function actionResetIngreso()
+    {
+        $sesion = Yii::$app->session;
+        $sesion->set('productos', []);
+        $this->redirect('ingreso');
+    }
+
+    public function actionConfirmarIngreso()
+    {
+        $sesion = Yii::$app->session;
+        $productos = $sesion->get('productos', []);
+        Producto::registrarIngreso($productos);
+        $sesion->set('productos', []);
+        return $this->redirect('index');
     }
 
     /**
