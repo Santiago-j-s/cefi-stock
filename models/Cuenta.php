@@ -12,7 +12,6 @@ use yii\base\Model;
  */
 class Cuenta extends Model
 {
-    //TODO: Depósitos y retiros, mirar cefi_reglas.md
     public $montoDeposito;
     public $montoRetiro;
 

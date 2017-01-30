@@ -89,8 +89,7 @@ class ProductoController extends Controller
     {
         $model = new Producto(['scenario' => Producto::SCENARIO_INGRESO]);
 
-        $sesion = Yii::$app->session;
-        $productos = $sesion->get('productos', []);
+        $productos = $this->getProductosSesion();
 
         $mensaje = \yii\helpers\VarDumper::dumpAsString($productos);
         \Yii::error($mensaje);
@@ -117,9 +116,7 @@ class ProductoController extends Controller
     {
         $producto = new Producto(['scenario' => Producto::SCENARIO_INGRESO]);
 
-        $sesion = Yii::$app->session;
-        //$sesion->set('productos', null);
-        $productos = $sesion->get('productos', []);
+        $productos = $this->getProductosSesion();
 
         $mensaje = \yii\helpers\VarDumper::dumpAsString($productos);
         \Yii::error($mensaje);
@@ -127,22 +124,8 @@ class ProductoController extends Controller
         $request = Yii::$app->request;
         if($request->isPost) {
             if($producto->load($request->post()) && $producto->validate()) {
-                $cantidad = $producto->Cantidad;
-                $id = $producto->ID;
-
-                if(array_key_exists($id, $productos)) {
-                    $cantidad += $productos[$id]->Cantidad;
-                }
-
-                $producto = Producto::findOne(['ID' => $id]);
-                $producto->Cantidad = $cantidad;
-
-                $productos = array_replace($productos, [$id => $producto]);
-
-                $mensaje = "Producto Añadido:\n" . \yii\helpers\VarDumper::dumpAsString($producto);
-                \Yii::trace($mensaje);
-
-                $sesion->set('productos', $productos);
+                $productos = $this->addProducto($producto);
+                $this->setProductosSesion($productos);
             }
 
             $dataProvider = Producto::getIngresoDataProvider($productos);
@@ -157,20 +140,57 @@ class ProductoController extends Controller
         return $this->redirect('ingreso');
     }
 
+    private function addProducto($producto)
+    {
+        $cantidad = $producto->Cantidad;
+        $id = $producto->ID;
+        
+        $productos = $this->getProductosSesion();
+        if(array_key_exists($id, $productos)) {
+            $cantidad += $productos[$id]->Cantidad;
+        }
+
+        $producto = Producto::findOne(['ID' => $id]);
+        $producto->Cantidad = $cantidad;
+
+        $productos = array_replace($productos, [$id => $producto]);
+
+        $mensaje = "Producto Añadido:\n" . \yii\helpers\VarDumper::dumpAsString($producto);
+        \Yii::trace($mensaje);
+
+        return $productos;
+    }
+
     public function actionResetIngreso()
     {
-        $sesion = Yii::$app->session;
-        $sesion->set('productos', []);
+        $this->setProductosSesion([]);
         $this->redirect('ingreso');
     }
 
     public function actionConfirmarIngreso()
     {
-        $sesion = Yii::$app->session;
-        $productos = $sesion->get('productos', []);
-        Producto::registrarIngreso($productos);
-        $sesion->set('productos', []);
+        $productos = $this->getProductosSesion();
+
+        try {
+            Producto::registrarIngreso($productos);
+            $this->setProductosSesion([]);
+        } catch(\Exception $e) {
+            \Yii::$app->session->setFlash('danger', $e);
+        }
+
         return $this->redirect('index');
+    }
+
+    private function getProductosSesion()
+    {
+        $sesion = Yii::$app->session;
+        return $sesion->get('productos', []);
+    }
+
+    private function setProductosSesion($productos)
+    {
+        $sesion = Yii::$app->session;
+        $sesion->set('productos', $productos);
     }
 
     /**

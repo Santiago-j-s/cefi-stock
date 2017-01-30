@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\base\UserException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
@@ -169,7 +170,7 @@ class Producto extends \yii\db\ActiveRecord
             if(!parent::save()) {
                 $mensaje = "Producto: " . \yii\helpers\VarDumper::dumpAsString($this);
                 \Yii::warning($mensaje);
-                throw new \Exception("No se pudo guardar el producto");
+                throw new UserException("No se pudo guardar el producto: " . $this->Descripcion);
             }
 
             $inventario = $this->inventario;
@@ -183,7 +184,7 @@ class Producto extends \yii\db\ActiveRecord
             if(!$inventario->save()) {
                 $mensaje = \yii\helpers\VarDumper::dumpAsString($inventario);
                 \Yii::error($mensaje);
-                throw new \Exception("No se pudo guardar el inventario");    
+                throw new UserException("No se pudo guardar el inventario de " . $this->Descripcion);    
             }
 
             $transaction->commit();
