@@ -10,9 +10,11 @@ $this->params['breadcrumbs'][] = ['label' => 'Productos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="producto-create col-md-8 col-md-offset-2">
+<div class="producto-create col-md-6 col-md-offset-3">
     <div class="panel panel-primary">
-        <div class="panel-heading"><?= Html::encode($this->title) ?></div>
+        <div class="panel-heading">
+            <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
+        </div>
         <div class="panel-body">
             <?= $this->render('_form', [
                 'model' => $model,

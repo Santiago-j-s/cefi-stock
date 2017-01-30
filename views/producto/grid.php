@@ -10,11 +10,12 @@ use yii\bootstrap\Html;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\DataProvider */
 
-$confirmarOptions =  ['class' => 'btn btn-primary pull-right', 'style' => 'margin: 10px;'];
-$resetOptions = ['class' => 'btn btn-danger pull-right', 'style' => 'margin:10px;'];
+$confirmarOptions =  ['class' => 'btn btn-primary pull-right'];
+$resetOptions = ['class' => 'btn btn-danger pull-right'];
 
 if($dataProvider->count < 1) {
-    $buttonOptions['disabled'] = true;
+    $confirmarOptions['disabled'] = true;
+    $resetOptions['disabled'] = true;
 }
 ?>
 
@@ -26,14 +27,20 @@ if($dataProvider->count < 1) {
     ],
 ]); ?>
 <div class="row">
-    <?= Html::beginForm(['confirmar-ingreso'], 'post') ?>
-        <div class="form-group">
-            <?= Html::submitButton('Confirmar', $confirmarOptions) ?>
+    <div class="col-md-12">
+        <div class="col-xs-1 pull-right">
+                <?= Html::beginForm(['confirmar-ingreso'], 'post') ?>
+                    <div class="form-group">
+                        <?= Html::submitButton('Confirmar', $confirmarOptions) ?>
+                    </div>
+                <?= Html::endForm() ?>
         </div>
-    <?= Html::endForm() ?>
-    <?= Html::beginForm(['reset-ingreso'], 'post') ?>
-        <div class="form-group">
-            <?= Html::submitButton('Reset', $resetOptions) ?>
+        <div class="col-xs-1 pull-right">
+                <?= Html::beginForm(['reset-ingreso'], 'post') ?>
+                    <div class="form-group">
+                        <?= Html::submitButton('Reset', $resetOptions) ?>
+                    </div>
+                <?= Html::endForm() ?>
         </div>
-    <?= Html::endForm() ?>
+    </div>
 </div>

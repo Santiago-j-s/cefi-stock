@@ -9,12 +9,15 @@ $this->title = 'Actualizar Monto';
 $this->params['breadcrumbs'][] = ['label' => 'Estado de Caja', 'url' => ['view']];
 $this->params['breadcrumbs'][] = 'Modificar Monto';
 ?>
-<div class="caja-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
+<div class="caja-update col-md-6 col-md-offset-3">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title"><?= Html::encode($this->title) ?></h3>
+        </div>
+        <div class="panel-body">
+            <?= $this->render('_form', [
+                'model' => $model,
+            ]) ?>
+        </div>
+    </div>
 </div>
