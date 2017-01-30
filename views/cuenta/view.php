@@ -4,6 +4,7 @@ use yii\bootstrap\Html;
 use yii\widgets\DetailView;
 use yii\bootstrap\Modal;
 use yii\bootstrap\ActiveForm;
+use yii\bootstrap\Button;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Cuenta */
@@ -11,15 +12,11 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Estado de Cuenta';
 $this->params['breadcrumbs'][] = $this->title;
 
-function inputTemplate($textButton) {
+function inputTemplate() {
     $template = '<div class="input-group">' .
         '<span class="input-group-addon">$</span>' .
         '{input}' .
-        '<div class="input-group-btn"><button type="submit" class="btn btn-primary">' .
-        $textButton .
-        '</button></div>' .
         '</div>';
-    
     return $template;
 }
 ?>
@@ -33,57 +30,69 @@ function inputTemplate($textButton) {
                 <?php $form = ActiveForm::begin([
                     'action' => ['retiro'],
                     'layout' => 'inline',
-                    'options' => ['class' => 'col-md-4'],
+                    'options' => ['class' => 'col-md-6'],
                 ]) ?>
+                    <div class="form-group">
                     <?= $form->field($retiro, 'monto', [
-                        'inputTemplate' => inputTemplate('Retiro'),
+                        'inputTemplate' => inputTemplate(),
                         'enableError' => true,
                         ])->textInput(['maxlength' => true]) ?>
+                    </div>
+                        <?= Button::widget(['label' => 'Retiro', 'options' => ['type' => 'submit', 'class' => 'btn btn-default']]) ?>
                 <?php ActiveForm::end() ?>
 
                 <?php $form = ActiveForm::begin([
                     'action' => ['deposito'],
                     'layout' => 'inline',
-                    'options' => ['class' => 'col-md-4'],
+                    'options' => ['class' => 'col-md-6'],
                 ]) ?>
+                    <div class="form-group">
                     <?= $form->field($deposito, 'monto', [
-                        'inputTemplate' => inputTemplate('Depósito'), 
+                        'inputTemplate' => inputTemplate(), 
                         'enableError' => true,
                     ])->textInput(['maxlength' => true,]) ?>
+                    </div>
+                        <?= Button::widget(['label' => 'Retiro', 'options' => ['class' => 'btn btn-default']]) ?>
                 <?php ActiveForm::end() ?>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-primary">
+        <div class="col-md-6">
+            <div class="panel">
                 <div class="panel-heading">
                     <h1 class="panel-title">Caja</h1>
                 </div>
                 <?= DetailView::widget([
                     'model' => $model,
+                    'options' => [
+                        'tag' => 'div',
+                        'class' => 'panel-body'
+                    ],
                     'attributes' => [
                         'MontoCaja:currency',
                         'FechaUltMovimientoCaja:datetime',
                     ],
-                    'options' => ['class' => 'table']
+                    'template' => '<dl><dt>{label}</dt><dd>{value}</dd></dl>',
                 ]) ?>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-primary">
+        <div class="col-md-6">
+            <div class="panel">
                 <div class="panel-heading">
                     <h1 class="panel-title">Sobre</h1>
                 </div>
                 <?= DetailView::widget([
                     'model' => $model,
+                    'options' => [
+                        'tag' => 'div',
+                        'class' => 'panel-body',
+                    ],
                     'attributes' => [
                         'MontoSobre:currency',
                         'FechaUltMovimientoSobre:datetime',
                     ],
-                    'options' => ['class' => 'table']
+                    'template' => '<dl><dt>{label}</dt><dd>{value}</dd></dl>',
                 ]) ?>
             </div>
         </div>

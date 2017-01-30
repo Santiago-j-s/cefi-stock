@@ -22,7 +22,7 @@ $js = <<<JS
     console.log(select);
     console.log(form);
 
-    select.on('select2-loaded', function(e) {
+    window.addEventListener('load', function() {
         select.select2('open');
     });
 
