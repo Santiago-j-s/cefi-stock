@@ -9,6 +9,7 @@ $db = array_merge(
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
+    'defaultRoute' => 'cuenta',
     'bootstrap' => ['log'],
     'modules' => [
         'admin' => [

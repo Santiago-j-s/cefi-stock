@@ -10,7 +10,7 @@ use yii\bootstrap\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'Descripcion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'Descripcion')->textArea(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'PrecioVenta', [
         'inputTemplate' => '<div class="input-group"><span class="input-group-addon">$</span>{input}</div>',
@@ -19,7 +19,7 @@ use yii\bootstrap\ActiveForm;
     <?= $form->field($model, 'CodigoBarra')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-primary' : 'btn btn-default']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

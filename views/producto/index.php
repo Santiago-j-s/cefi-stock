@@ -23,10 +23,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::begin([
         'id' => 'grid',
         'enablePushState' => false,
-    ]) ?>
+    ]); ?>
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
+            'tableOptions' => [
+                'class' => 'table table-hover',
+            ],
             'columns' => [
                 [
                     'attribute' => '#',
@@ -36,13 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'PrecioVenta:currency',
                 'Cantidad',
                 //'FechaUltModificacion',
-                'CodigoBarra',
-
                 [
                     'class' => 'yii\grid\ActionColumn',
+                    'header' => 'Acciones',
                     'template' => '{view} {update}',
                 ],
             ],
         ]); ?>
-    <?php Pjax::end() ?>
+    <?php Pjax::end(); ?>
 </div>

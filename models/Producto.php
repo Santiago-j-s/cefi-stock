@@ -133,11 +133,7 @@ class Producto extends \yii\db\ActiveRecord
      */
     public function setCantidad($value)
     {
-        if(isset($this->inventario)) {
-            $this->inventario->Cantidad = $value;
-        }
-
-        $this->_cantidad = $value;
+        $this->_cantidad += $value;
     }
 
     /**

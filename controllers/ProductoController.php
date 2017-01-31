@@ -92,7 +92,7 @@ class ProductoController extends Controller
         $productos = $this->getProductosSesion();
 
         $mensaje = \yii\helpers\VarDumper::dumpAsString($productos);
-        \Yii::error($mensaje);
+        \Yii::trace($mensaje);
         
         $descripcionProductos = Producto::find()->all();
         $mapDescripcionProductos = ArrayHelper::map($descripcionProductos, 'ID', 'Descripcion');
@@ -170,6 +170,9 @@ class ProductoController extends Controller
     public function actionConfirmarIngreso()
     {
         $productos = $this->getProductosSesion();
+
+        $mensaje = \yii\helpers\VarDumper::dumpAsString($productos);
+        \Yii::error($mensaje);
 
         try {
             Producto::registrarIngreso($productos);

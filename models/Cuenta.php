@@ -35,8 +35,8 @@ class Cuenta extends Model
     public function attributeLabels()
     {
         return [
-            'MontoCaja' => 'Monto',
-            'MontoSobre' => 'Monto',
+            'MontoCaja' => 'Monto en Caja',
+            'MontoSobre' => 'Monto en Sobre',
             'FechaUltMovimientoCaja' => 'Último Movimiento',
             'FechaUltMovimientoSobre' => 'Último Movimiento',
         ];

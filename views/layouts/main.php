@@ -32,7 +32,6 @@
     $username = !\Yii::$app->user->isGuest ? \Yii::$app->user->identity->NombreUsuario : null;
     
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
         ['label' => 'Cuenta', 'items' => [
             ['label' => 'Estado', 'url' => '/cuenta/'],
             ['label' => 'Modificar Montos', 'url' => '/cuenta/modificar-monto'],

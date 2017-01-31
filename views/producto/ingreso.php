@@ -37,8 +37,10 @@ $this->registerJs($js);
 ?>
 <div class='row'>
     <div class='col-md-12'>
-        <div class='panel panel-primary'>
-            <div class="panel-heading">Ingresar Datos de Producto</div>
+        <div class='panel panel-default'>
+            <div class="panel-heading">
+                <h1 class="panel-title">Ingresar Datos de Producto</h1>
+            </div>
             <div class="panel-body">
                 <?php $form = ActiveForm::begin([
                     'action' => 'add-producto',
@@ -62,7 +64,7 @@ $this->registerJs($js);
 
                     <?= Html::button('Añadir Producto', $options = [
                         'type' => 'submit',
-                        'class' => 'btn btn-primary',
+                        'class' => 'btn btn-default',
                     ]) ?>
                 <?php ActiveForm::end(); ?>
             </div>
