@@ -1,5 +1,6 @@
 <?php
 
+use kartik\money\MaskMoney;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -12,8 +13,8 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'MontoCaja')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'MontoSobre')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'MontoCaja')->widget(MaskMoney::classname()) ?>
+    <?= $form->field($model, 'MontoSobre')->widget(MaskMoney::classname()) ?>
 
     <div class="form-group">
         <?= Html::submitButton(!$model->iniciado() ? 'Crear' : 'Actualizar', ['class' => !$model->iniciado() ? 'btn btn-success' : 'btn btn-primary']) ?>

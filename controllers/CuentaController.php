@@ -94,8 +94,8 @@ class CuentaController extends Controller
         }
 
         $retiro = $this->retiroModel;
-
-        if ($retiro->load(Yii::$app->request->post()) && $retiro->validate()) {
+        $post = Yii::$app->request->post($retiro->formName());
+        if ($retiro->load($post, 'retiro') && $retiro->validate()) {
             if(!$model->retiro($retiro)) {
                 \Yii::$app->session->setFlash('danger', 'No se ha podido realizar el retiro');         
             }
@@ -120,8 +120,9 @@ class CuentaController extends Controller
         }
 
         $deposito = $this->depositoModel;
+        $post = Yii::$app->request->post($deposito->formName());
 
-        if ($deposito->load(Yii::$app->request->post()) && $deposito->validate()) {
+        if ($deposito->load($post, 'deposito') && $deposito->validate()) {
             if(!$model->deposito($deposito)) {
                 \Yii::$app->session->setFlash('danger', 'No se ha podido realizar el depósito');         
             }

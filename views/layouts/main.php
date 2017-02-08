@@ -9,6 +9,7 @@
     use yii\bootstrap\NavBar;
     use yii\bootstrap\Alert;
     use yii\widgets\Breadcrumbs;
+    use yii\widgets\Pjax;
     use app\assets\AppAsset;
     use mdm\admin\components\Helper;
 
@@ -68,7 +69,10 @@
             $flashes = Yii::$app->session->getAllFlashes();
             foreach ($flashes as $key => $message) {
                 echo Alert::widget([
-                    'options' => ['class' => 'alert-' . $key],
+                    'options' => [
+                        'id' => 'alert',
+                        'class' => 'alert-' . $key,
+                    ],
                     'body' => $message,
                 ]);
             }
@@ -82,9 +86,9 @@
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">CEFI <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right"></p>
     </div>
 </footer>
 

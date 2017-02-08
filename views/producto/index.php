@@ -10,6 +10,37 @@ use yii\widgets\Pjax;
 
 $this->title = 'Productos';
 $this->params['breadcrumbs'][] = $this->title;
+
+$gridOptions = ['class' => 'table table-hover'];
+$gridColumns = [
+    ['attribute' => '#', 'value' => 'ID'],
+    'Descripcion',
+    'PrecioVenta:currency',
+    'Cantidad',
+    //'FechaUltModificacion',
+];
+
+array_push($gridColumns, [
+    'class' => 'yii\grid\ActionColumn',
+    'header' => 'Acciones',
+    'template' => '{view} {update}',
+]);
+
+$layout = implode("\n", [
+    "<div class='panel panel-default'>",
+        "{items}",
+        "<div class='panel-footer'>{summary}</div>",
+    "</div>",
+    "{pager}",
+]);
+
+$gridView = GridView::widget([
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
+    'tableOptions' => $gridOptions,
+    'columns' => $gridColumns,
+    'layout' => $layout,    
+]); 
 ?>
 <div class="producto-index">
     <div class="page-header">
@@ -24,27 +55,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => 'grid',
         'enablePushState' => false,
     ]); ?>
-        <?= GridView::widget([
-            'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
-            'tableOptions' => [
-                'class' => 'table table-hover',
-            ],
-            'columns' => [
-                [
-                    'attribute' => '#',
-                    'value' => 'ID',
-                ],
-                'Descripcion',
-                'PrecioVenta:currency',
-                'Cantidad',
-                //'FechaUltModificacion',
-                [
-                    'class' => 'yii\grid\ActionColumn',
-                    'header' => 'Acciones',
-                    'template' => '{view} {update}',
-                ],
-            ],
-        ]); ?>
+        <?= $gridView ?>
     <?php Pjax::end(); ?>
 </div>

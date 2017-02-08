@@ -192,6 +192,8 @@ class Producto extends \yii\db\ActiveRecord
             $transaction->rollBack();
             throw $e;
         }
+
+        return false;
     }
 
     /**

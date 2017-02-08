@@ -17,3 +17,7 @@
 * Desean tener un resumen de cuenta de proveedores con las facturas pagas e impagas (las facturas han de registrarse)
 
 * Tienen una planilla con la que manejan los turnos (fecha, entrada, salida, nombre)
+
+* Añadir total mercadería a estado de cuenta
+
+* Al registrar un ingreso es posible pagar o no la factura

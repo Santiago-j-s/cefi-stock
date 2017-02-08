@@ -2,11 +2,11 @@
 
 use yii\bootstrap\Html;
 use yii\widgets\DetailView;
-use yii\bootstrap\Modal;
-use yii\bootstrap\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Cuenta */
+/* @var $deposito DynamicModel */
+/* @var $retiro DynamicModel */
 
 $this->title = 'Estado de Cuenta';
 $this->params['breadcrumbs'][] = $this->title;
@@ -22,72 +22,55 @@ function inputTemplate($textButton) {
     
     return $template;
 }
+
+$detailViewConfig = [
+    'model' => $model,
+    'options' => ['class' => 'table'],
+];
+
+$cajaConfig = array_replace($detailViewConfig, [
+   'attributes' => [
+        'MontoCaja:currency',
+        'FechaUltMovimientoCaja:datetime',
+    ], 
+]);
+
+$sobreConfig = array_replace($detailViewConfig, [
+   'attributes' => [
+        'MontoSobre:currency',
+        'FechaUltMovimientoSobre:datetime',
+    ], 
+]);
+
+$cajaView = DetailView::widget($cajaConfig);
+$sobreView = DetailView::widget($sobreConfig); 
 ?>
 <div class="caja-view">
     <div class="page-header">
         <h1><?= Html::encode($this->title) ?></h1>
     </div>
     <div class="row">
-        <?php $form = ActiveForm::begin([
-            'action' => ['retiro'],
-            'layout' => 'inline',
-            'options' => ['class' => 'col-md-6'],
+        <?= $this->render('_retiro', [
+            'retiro' => $retiro, 'inputTemplate' => inputTemplate('Retiro')
         ]) ?>
-            <?= $form->field($retiro, 'monto', [
-                'inputTemplate' => inputTemplate('Retiro'),
-                'enableError' => true,
-                ])->textInput(['maxlength' => true]) ?>
-        <?php ActiveForm::end() ?>
-
-        <?php $form = ActiveForm::begin([
-            'action' => ['deposito'],
-            'layout' => 'inline',
-            'options' => ['class' => 'col-md-6'],
+        <?= $this->render('_deposito', [
+            'deposito' => $deposito, 'inputTemplate' => inputTemplate('Deposito')
         ]) ?>
-            <?= $form->field($deposito, 'monto', [
-                'inputTemplate' => inputTemplate('Depósito'), 
-                'enableError' => true,
-            ])->textInput(['maxlength' => true,]) ?>
-        <?php ActiveForm::end() ?>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Caja</h1>
-                </div>
-                <?= DetailView::widget([
-                    'model' => $model,
-                    'options' => [
-                        'tag' => 'div',
-                        'class' => 'panel-body'
-                    ],
-                    'attributes' => [
-                        'MontoCaja:currency',
-                        'FechaUltMovimientoCaja:datetime',
-                    ],
-                    'template' => '<dl><dt>{label}</dt><dd>{value}</dd></dl>',
-                ]) ?>
-            </div>
+            <?= $this->render('//layouts/_panel-bootstrap', [
+                'title' => 'Caja',
+                'content' => $cajaView,
+                'body' => false,
+            ]) ?>
         </div>
         <div class="col-md-4 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h1 class="panel-title">Sobre</h1>
-                </div>
-                <?= DetailView::widget([
-                    'model' => $model,
-                    'options' => [
-                        'tag' => 'div',
-                        'class' => 'panel-body',
-                    ],
-                    'attributes' => [
-                        'MontoSobre:currency',
-                        'FechaUltMovimientoSobre:datetime',
-                    ],
-                    'template' => '<dl><dt>{label}</dt><dd>{value}</dd></dl>',
-                ]) ?>
-            </div>
+            <?= $this->render('//layouts/_panel-bootstrap', [
+                'title' => 'Sobre',
+                'content' => $sobreView,
+                'body' => false,
+            ]) ?>
         </div>
     </div>
 </div>
