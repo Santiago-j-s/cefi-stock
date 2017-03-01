@@ -23,7 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?= $form->field($login, 'nombreUsuario')->textInput(['autofocus' => true]) ?>
             <?= $form->field($login, 'password')->passwordInput() ?>
-            <?= $form->field($login, 'rememberMe')->checkbox() ?>
 
             <div class="form-group">
                 <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>

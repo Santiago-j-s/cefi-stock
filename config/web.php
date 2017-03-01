@@ -45,7 +45,6 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\Usuario',
             'enableSession' => true,
-            'enableAutoLogin' => true,
             'loginUrl' => ['/site/iniciar-turno'],
         ],
         'errorHandler' => [
