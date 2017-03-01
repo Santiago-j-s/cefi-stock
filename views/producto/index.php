@@ -52,7 +52,6 @@ $gridView = GridView::widget([
         <?= Html::a('Ingreso de Productos', ['ingreso'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?php Pjax::begin([
-        'id' => 'grid',
         'enablePushState' => false,
     ]); ?>
         <?= $gridView ?>

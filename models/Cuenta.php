@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\helpers\ArrayHelper;
 
 /**
  * El modelo Cuenta contiene la lógica correspondiente a las operaciones monetarias del kiosco
@@ -59,8 +60,8 @@ class Cuenta extends Model
      */
     public function getMontoCaja()
     {
-        \Yii::info("Iniciado: " . \yii\helpers\VarDumper::dumpAsString($this->iniciado()));
-        \Yii::info("Caja:\n" . \yii\helpers\VarDumper::dumpAsString($this->_caja));
+        \Yii::info("Montos Iniciados: " . \yii\helpers\VarDumper::dumpAsString($this->iniciado()));
+        \Yii::info("Caja:\n" . \yii\helpers\VarDumper::dumpAsString($this->_caja->Attributes));
         return ($this->iniciado()) ? $this->_caja->Monto : '';
     }
 
@@ -81,11 +82,11 @@ class Cuenta extends Model
      */
     public function getMontoSobre()
     {
-        \Yii::info("Iniciado: "
+        \Yii::trace("Montos Iniciados: "
             . \yii\helpers\VarDumper::dumpAsString($this->iniciado()));
         
-        \Yii::info("Sobre:\n"
-            . \yii\helpers\VarDumper::dumpAsString($this->_sobre));
+        \Yii::trace("Sobre:\n"
+            . \yii\helpers\VarDumper::export($this->_sobre->Attributes));
         
         return ($this->iniciado()) ? $this->_sobre->Monto : '';
     }
@@ -203,5 +204,17 @@ class Cuenta extends Model
         $existeCaja = ($this->_caja !== null);
         $existeSobre = ($this->_sobre !== null);
         return ($existeCaja && $existeSobre); 
+    }
+
+    public static function getTotalMercaderia()
+    {
+        $productos = Producto::find()->all();
+        $precios = ArrayHelper::getColumn($productos, 'PrecioVenta');
+        $mensaje = "Precios:\n" . \yii\helpers\VarDumper::dumpAsString($precios);
+        \Yii::trace($mensaje);
+        $total = array_reduce($precios, 'bcadd', '00.00');
+        $mensaje = 'Valor total de mercadería: ' . $total;
+        \Yii::trace($mensaje);
+        return $total;
     }
 }

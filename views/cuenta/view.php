@@ -11,6 +11,8 @@ use yii\widgets\DetailView;
 $this->title = 'Estado de Cuenta';
 $this->params['breadcrumbs'][] = $this->title;
 
+$formatter = Yii::$app->formatter;
+
 function inputTemplate($textButton) {
     $template = '<div class="input-group">' .
         '<span class="input-group-addon">$</span>' .
@@ -73,4 +75,8 @@ $sobreView = DetailView::widget($sobreConfig);
             ]) ?>
         </div>
     </div>
+    <blockquote>
+        <strong>Total Mercadería: </strong>
+        <?= $formatter->asCurrency($totalMercaderia) ?>
+    </blockquote>
 </div>

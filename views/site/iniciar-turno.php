@@ -11,7 +11,7 @@ use yii\bootstrap\ActiveForm;
 $this->title = 'Iniciar Turno';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login col-md-6 col-md-offset-3">
+<div class="site-login col-md-4 col-md-offset-4">
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h1 class="panel-title"><?= Html::encode($this->title) ?></h1>

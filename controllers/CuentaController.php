@@ -29,11 +29,14 @@ class CuentaController extends Controller
         if(!$model->iniciado()) {
             return $this->redirect(['iniciar-cuenta']);
         }
+
+        $totalMercaderia = Cuenta::getTotalMercaderia();
         
         return $this->render('view', [
             'model' => $model,
             'retiro' => $this->retiroModel,
             'deposito' => $this->depositoModel,
+            'totalMercaderia' => $totalMercaderia,
         ]);
     }
 
@@ -142,7 +145,7 @@ class CuentaController extends Controller
     {
         $model = new Cuenta();
         $model->iniciarCuenta();
-
+        
         if($model->load(Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->session->setFlash('success', 'Se ha iniciado un nuevo monto');
        

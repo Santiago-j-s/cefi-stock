@@ -33,10 +33,13 @@
     $username = !\Yii::$app->user->isGuest ? \Yii::$app->user->identity->NombreUsuario : null;
     
     $menuItems = [
-        ['label' => 'Cuenta', 'items' => [
-            ['label' => 'Estado', 'url' => '/cuenta/'],
-            ['label' => 'Modificar Montos', 'url' => '/cuenta/modificar-monto'],
-        ]],
+        ['label' => 'Cuenta', 
+            'visible' => !\Yii::$app->user->isGuest,
+            'items' => [
+                ['label' => 'Estado', 'url' => '/cuenta/'],
+                ['label' => 'Modificar Montos', 'url' => '/cuenta/modificar-monto'],
+            ],
+        ],
         ['label' => 'Productos', 'url' => ['/producto/index']],
         ['label' => 'Admin', 'url' => ['/admin/']],
         ['label' => 'Iniciar Turno', 'url' => ['/site/iniciar-turno'], 'visible' => \Yii::$app->user->isGuest],

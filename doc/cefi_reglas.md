@@ -21,3 +21,5 @@
 * Añadir total mercadería a estado de cuenta
 
 * Al registrar un ingreso es posible pagar o no la factura
+
+* Mostrar logs de todas los movimientos de dinero, ventas, intentos de acceso al sistema, ...

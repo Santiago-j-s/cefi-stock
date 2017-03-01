@@ -88,17 +88,19 @@ class SiteController extends Controller
             if($isLoginValid) {
                 $turno->UsuarioID = $login->Usuario->ID;
                 $isTurnoSaved = $turno->save();
+                if(!$isTurnoSaved) {
+                    Yii::$app->session->setFlash('danger', 'No se ha podido iniciar el turno');
+                    Yii::error("Errores: \n"
+                                . 'Turno: ' . \yii\helpers\VarDumper::dumpAsString($turno->errors) . "\n"
+                                . 'LoginForm: ' . \yii\helpers\VarDumper::dumpAsString($login->errors));
+                }
+
                 $isLogged = ($isTurnoSaved and $login->login());
             }
 
             if(isset($isLogged) and $isLogged === true) {
                 Yii::$app->session->setFlash('success', 'Turno Iniciado');
                 return $this->goHome();
-            } else {
-                Yii::$app->session->setFlash('danger', 'No se ha podido iniciar el turno');
-                Yii::error("Errores: \n"
-                            . 'Turno: ' . \yii\helpers\VarDumper::dumpAsString($turno->errors) . "\n"
-                            . 'LoginForm: ' . \yii\helpers\VarDumper::dumpAsString($login->errors));
             }
         }
 
@@ -115,8 +117,8 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
 
+        Yii::$app->user->logout();
         return $this->goHome();
     }
 

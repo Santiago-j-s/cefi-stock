@@ -31,6 +31,14 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'Tn0HRRqaaMhb2jffbJJpheDKVtZgF056',
         ],
+        'session' => [
+            'class' => 'yii\web\DbSession',
+            'writeCallback' => function($session) {
+                return [
+                    'user_id' => Yii::$app->user->id,
+                ];
+            }
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -57,6 +65,12 @@ $config = [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'categories' => ['application'],
+                    'logVars' => [],
+                    'logFile' => "@runtime/logs/mylog.log",
+                ]
             ],
         ],
         'db' => $db,
