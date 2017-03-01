@@ -136,8 +136,29 @@ class Turno extends \yii\db\ActiveRecord
         if(!parent::beforeSave($insert)) {
             return false;
         }
+        if($this->isNewRecord) {
+            $this->HoraInicial = new Expression('NOW()');
+        }
 
-        $this->HoraInicial = new Expression('NOW()');
         return true;
+    }
+
+    public static function encontrarTurnoUsuario($idUsuario)
+    {
+        $turno = self::findOne(['UsuarioID' => $idUsuario]);
+        if(!isset($turno)) {
+            throw new Exception('No existe turno para el usuario con id: ' . $idUsuario);
+        } 
+        return $turno;
+    }
+
+    public function marcarHoraFinal()
+    {
+        $this->HoraFinal = new Expression('NOW()');
+        if(!$this->save()) {
+            $mensaje = "Error al cambiar hora final en turno: " . $this->errors;
+            \Yii::error($mensaje);
+            throw new \Exception('Error al cambiar la hora final en turno');
+        }
     }
 }

@@ -143,4 +143,12 @@ class Usuario extends ActiveRecord implements IdentityInterface
     {
         return Yii::$app->security->validatePassword($password, $this->Password);
     }
+
+    public static function logout()
+    {
+        $user = Yii::$app->user;
+        $turno = Turno::encontrarTurnoUsuario($user->id);
+        $turno->marcarHoraFinal();
+        $user->logout();
+    }
 }
